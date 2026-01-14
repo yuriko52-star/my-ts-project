@@ -1,6 +1,7 @@
 // eslint.config.js
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import globals from 'globals';
 
 
 export default [
@@ -23,17 +24,23 @@ export default [
     files: ['**/*.ts'],
     languageOptions: {
       parser: tseslint.parser,
+      globals: {
+        ...globals.node, // ★ これが決定打
+      },
       parserOptions: {
-        project: './tsconfig.json',
+        // project: './tsconfig.json',
+        project: ['./tsconfig.json'], // ★ 配列にする
         ecmaVersion: 2020,
         sourceType: 'module',
+        // tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: process.cwd(), // ★ import.meta.dirname は使わない
       },
-    },
-    rules: {
-      // カスタムルール（そのまま移行）
-      '@typescript-eslint/explicit-function-return-type': 'warn',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'error',
+      rules: {
+        // カスタムルール（そのまま移行）
+        '@typescript-eslint/explicit-function-return-type': 'warn',
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        '@typescript-eslint/no-explicit-any': 'error',
+      },
     },
   },
 ];
